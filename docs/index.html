@@ -1,17 +1,13 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description"
-    content="CPU Core Temps — widget para a barra de tarefas do KDE Plasma 6. Temperaturas dos núcleos físicos em texto colorido." />
+  <meta name="description" content="CPU Core Temps — widget para a barra de tarefas do KDE Plasma 6. Temperaturas dos núcleos físicos em texto colorido." />
   <title>CPU Core Temps — Widget KDE Plasma</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap"
-    rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet" />
   <style>
     :root {
       --bg: #0d1117;
@@ -251,39 +247,14 @@
       margin-right: 0.5rem;
     }
 
-    .widget-temps .c0 {
-      color: #4fc3f7;
-    }
-
-    .widget-temps .c1 {
-      color: #81c784;
-    }
-
-    .widget-temps .c2 {
-      color: #ffd54f;
-    }
-
-    .widget-temps .c3 {
-      color: #ba68c8;
-    }
-
-    .widget-temps .c4 {
-      color: #ff8a65;
-    }
-
-    .widget-temps .c5 {
-      color: #4db6ac;
-    }
-
-    .widget-temps .hot {
-      color: #ff9800;
-      font-weight: 700;
-    }
-
-    .widget-temps .crit {
-      color: #ff1744;
-      font-weight: 700;
-    }
+    .widget-temps .c0 { color: #4fc3f7; }
+    .widget-temps .c1 { color: #81c784; }
+    .widget-temps .c2 { color: #ffd54f; }
+    .widget-temps .c3 { color: #ba68c8; }
+    .widget-temps .c4 { color: #ff8a65; }
+    .widget-temps .c5 { color: #4db6ac; }
+    .widget-temps .hot { color: #ff9800; font-weight: 700; }
+    .widget-temps .crit { color: #ff1744; font-weight: 700; }
 
     .panel-clock {
       font-size: 0.8rem;
@@ -476,17 +447,9 @@
       margin: 0.75rem 0 0;
     }
 
-    pre .cmt {
-      color: #6e7681;
-    }
-
-    pre .cmd {
-      color: #79c0ff;
-    }
-
-    pre .path {
-      color: #a5d6ff;
-    }
+    pre .cmt { color: #6e7681; }
+    pre .cmd { color: #79c0ff; }
+    pre .path { color: #a5d6ff; }
 
     /* Config table */
     table {
@@ -499,8 +462,7 @@
       overflow: hidden;
     }
 
-    th,
-    td {
+    th, td {
       text-align: left;
       padding: 0.75rem 1rem;
       border-bottom: 1px solid var(--border);
@@ -540,21 +502,12 @@
     }
 
     @media (max-width: 560px) {
-      .nav-links {
-        display: none;
-      }
-
-      header.hero {
-        padding: 2.5rem 0 2rem;
-      }
-
-      .widget-temps {
-        font-size: 0.7rem;
-      }
+      .nav-links { display: none; }
+      header.hero { padding: 2.5rem 0 2rem; }
+      .widget-temps { font-size: 0.7rem; }
     }
   </style>
 </head>
-
 <body>
   <div class="wrap">
     <nav>
@@ -735,7 +688,7 @@
             <p>Copie a pasta do pacote para os widgets do usuário e reinicie o Plasma:</p>
             <pre><span class="cmt"># extrair o release e instalar</span>
 <span class="cmd">mkdir</span> -p ~/.local/share/plasma/plasmoids
-<span class="cmd">cp</span> -r package ~/.local/share/plasma/plasmoids/com.example.cpu-core-temps
+<span class="cmd">cp</span> -r package ~/.local/share/plasma/plasmoids/com.github.murilomunhao.cpu-core-temps
 <span class="cmd">systemctl</span> restart --user plasma-plasmashell.service</pre>
           </div>
         </li>
@@ -845,11 +798,17 @@
 
     <footer>
       <p>
-        CPU Core Temps · widget open source para
+        CPU Core Temps · por
+        <a href="https://github.com/murilomunhao">murilomunhao</a>
+        · widget open source para
         <a href="https://kde.org/plasma-desktop/">KDE Plasma</a>
+      </p>
+      <p style="margin-top: 0.35rem">
+        <a href="https://github.com/murilomunhao/cpu-core-temps">github.com/murilomunhao/cpu-core-temps</a>
+        ·
+        <a href="https://murilomunhao.github.io/cpu-core-temps">murilomunhao.github.io/cpu-core-temps</a>
       </p>
     </footer>
   </div>
 </body>
-
 </html>
