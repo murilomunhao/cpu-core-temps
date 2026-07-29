@@ -2,17 +2,18 @@
     "KPlugin": {
         "Authors": [
             {
-                "Email": "dev@murilomunhao.com",
-                "Name": "Murilo Munhão"
+                "Email": "",
+                "Name": "Murilo Munhao"
             }
         ],
         "Category": "System Information",
-        "Description": "Exibe a temperatura de cada núcleo da CPU na barra de tarefas, com cores diferentes e alerta em tons de vermelho",
+        "Description": "Exibe a temperatura de cada núcleo físico da CPU na barra de tarefas, com cores diferentes e alerta em tons de vermelho",
         "Icon": "temperature-normal",
-        "Id": "com.example.cpu-core-temps",
+        "Id": "com.github.murilomunhao.cpu-core-temps",
         "Name": "CPU Core Temps",
         "Version": "1.0",
-        "Website": ""
+        "Website": "https://murilomunhao.github.io/cpu-core-temps",
+        "BugReportUrl": "https://github.com/murilomunhao/cpu-core-temps/issues"
     },
     "X-Plasma-API-Minimum-Version": "6.0",
     "KPackageStructure": "Plasma/Applet"
