@@ -54,13 +54,38 @@ C0:42°  C1:45°  C2:48°  C3:51°  C4:44°  C5:47°
 
 ---
 
-## Instalação
+### Instalar o plasmoid
+
+Baixe o arquivo compactado na página de [Releases do GitHub](https://github.com/murilomunhao/cpu-core-temps/releases) e execute os seguintes comandos no terminal:
 
 ```bash
+# Extrai o pacote e entra na pasta
+unzip cpu-core-temps-v1.0.0.zip
+cd cpu-core-temps-v1.0.0
+
+# Da permissão de execução e instala
+chmod +x install.sh
+./install.sh
+```
+
+#### Instalação manual (opcional)
+
+```bash
+# Cria os diretórios necessários de forma segura
 mkdir -p ~/.local/share/plasma/plasmoids
+mkdir -p ~/.local/share/icons/hicolor/scalable/apps
+
+# Remove versão anterior se existir para evitar pastas aninhadas
+rm -rf ~/.local/share/plasma/plasmoids/com.github.murilomunhao.cpu-core-temps
+
+# Copia os arquivos do plasmoid e o ícone do sistema
 cp -r package ~/.local/share/plasma/plasmoids/com.github.murilomunhao.cpu-core-temps
+cp package/contents/icons/com.github.murilomunhao.cpu-core-temps.svg ~/.local/share/icons/hicolor/scalable/apps/
+
+# Reinicia o Plasma Shell para aplicar as alterações
 systemctl restart --user plasma-plasmashell.service
 ```
+
 
 Depois:
 
@@ -119,6 +144,7 @@ O número de linhas deve bater com a quantidade de `C0:`, `C1:`, … no widget.
 ```text
 package/
 ├── metadata.json
+├── LICENSE
 └── contents/
     ├── config/
     │   ├── config.qml
@@ -132,6 +158,25 @@ package/
 
 ---
 
-## Licença
+## 🤝 Contribuindo
 
-MIT
+Contribuições são sempre bem-vindas! Sinta-se à vontade para:
+
+1. Reportar bugs
+2. Sugerir novas funcionalidades
+3. Enviar pull requests
+
+## 📝 Licença
+
+Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
+
+## ☕ Apoie o Projeto
+
+Se este projeto te ajudou de alguma forma, considere fazer uma doação:
+
+**PIX**: `536c8d7e-fb28-444f-8d58-7fd87397d401`
+
+![](https://github.com/murilomunhao/boilerplate/blob/main/donate_pix_murilo.jpg)
+
+---
+Desenvolvido com ❤️ por Murilo Munhão

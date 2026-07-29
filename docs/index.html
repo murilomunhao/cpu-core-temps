@@ -1,13 +1,17 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="CPU Core Temps — widget para a barra de tarefas do KDE Plasma 6. Temperaturas dos núcleos físicos em texto colorido." />
+  <meta name="description"
+    content="CPU Core Temps — widget para a barra de tarefas do KDE Plasma 6. Temperaturas dos núcleos físicos em texto colorido." />
   <title>CPU Core Temps — Widget KDE Plasma</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap"
+    rel="stylesheet" />
   <style>
     :root {
       --bg: #0d1117;
@@ -247,14 +251,39 @@
       margin-right: 0.5rem;
     }
 
-    .widget-temps .c0 { color: #4fc3f7; }
-    .widget-temps .c1 { color: #81c784; }
-    .widget-temps .c2 { color: #ffd54f; }
-    .widget-temps .c3 { color: #ba68c8; }
-    .widget-temps .c4 { color: #ff8a65; }
-    .widget-temps .c5 { color: #4db6ac; }
-    .widget-temps .hot { color: #ff9800; font-weight: 700; }
-    .widget-temps .crit { color: #ff1744; font-weight: 700; }
+    .widget-temps .c0 {
+      color: #4fc3f7;
+    }
+
+    .widget-temps .c1 {
+      color: #81c784;
+    }
+
+    .widget-temps .c2 {
+      color: #ffd54f;
+    }
+
+    .widget-temps .c3 {
+      color: #ba68c8;
+    }
+
+    .widget-temps .c4 {
+      color: #ff8a65;
+    }
+
+    .widget-temps .c5 {
+      color: #4db6ac;
+    }
+
+    .widget-temps .hot {
+      color: #ff9800;
+      font-weight: 700;
+    }
+
+    .widget-temps .crit {
+      color: #ff1744;
+      font-weight: 700;
+    }
 
     .panel-clock {
       font-size: 0.8rem;
@@ -447,9 +476,17 @@
       margin: 0.75rem 0 0;
     }
 
-    pre .cmt { color: #6e7681; }
-    pre .cmd { color: #79c0ff; }
-    pre .path { color: #a5d6ff; }
+    pre .cmt {
+      color: #6e7681;
+    }
+
+    pre .cmd {
+      color: #79c0ff;
+    }
+
+    pre .path {
+      color: #a5d6ff;
+    }
 
     /* Config table */
     table {
@@ -462,7 +499,8 @@
       overflow: hidden;
     }
 
-    th, td {
+    th,
+    td {
       text-align: left;
       padding: 0.75rem 1rem;
       border-bottom: 1px solid var(--border);
@@ -502,12 +540,21 @@
     }
 
     @media (max-width: 560px) {
-      .nav-links { display: none; }
-      header.hero { padding: 2.5rem 0 2rem; }
-      .widget-temps { font-size: 0.7rem; }
+      .nav-links {
+        display: none;
+      }
+
+      header.hero {
+        padding: 2.5rem 0 2rem;
+      }
+
+      .widget-temps {
+        font-size: 0.7rem;
+      }
     }
   </style>
 </head>
+
 <body>
   <div class="wrap">
     <nav>
@@ -685,12 +732,34 @@
         <li>
           <div>
             <h3>Instalar o plasmoid</h3>
-            <p>Copie a pasta do pacote para os widgets do usuário e reinicie o Plasma:</p>
-            <pre><span class="cmt"># extrair o release e instalar</span>
-<span class="cmd">mkdir</span> -p ~/.local/share/plasma/plasmoids
-<span class="cmd">cp</span> -r package ~/.local/share/plasma/plasmoids/com.github.murilomunhao.cpu-core-temps
-<span class="cmd">systemctl</span> restart --user plasma-plasmashell.service</pre>
+            <p>Baixe o arquivo mais recente em <a href="https://github.com/murilomunhao/cpu-core-temps/releases"
+                target="_blank">GitHub Releases</a> e execute os comandos abaixo:</p>
+            <pre>
+    <span class="cmd">unzip</span> cpu-core-temps-v1.0.0.zip
+    <span class="cmd">cd</span> cpu-core-temps-v1.0.0
+    <span class="cmd">chmod</span> +x install.sh
+    ./install.sh
+  </pre>
+
+            <p style="margin-top: 1.25rem">Instalação manual (opcional)</p>
+            <pre>
+    <span class="cmt"># Cria os diretórios necessários de forma segura</span>
+    <span class="cmd">mkdir</span> -p ~/.local/share/plasma/plasmoids
+    <span class="cmd">mkdir</span> -p ~/.local/share/icons/hicolor/scalable/apps
+
+    <span class="cmt"># Remove versão anterior se existir para evitar pastas aninhadas</span>
+    <span class="cmd">rm</span> -rf ~/.local/share/plasma/plasmoids/com.github.murilomunhao.cpu-core-temps
+
+    <span class="cmt"># Copia os arquivos do plasmoid e o ícone do sistema</span>
+    <span class="cmd">cp</span> -r package ~/.local/share/plasma/plasmoids/com.github.murilomunhao.cpu-core-temps
+    <span class="cmd">cp</span> package/contents/icons/com.github.murilomunhao.cpu-core-temps.svg ~/.local/share/icons/hicolor/scalable/apps/
+
+    <span class="cmt"># Reinicia o Plasma Shell para aplicar as alterações</span>
+    <span class="cmd">systemctl</span> restart --user plasma-plasmashell.service
+  </pre>
           </div>
+
+
         </li>
         <li>
           <div>
@@ -811,4 +880,5 @@
     </footer>
   </div>
 </body>
+
 </html>
