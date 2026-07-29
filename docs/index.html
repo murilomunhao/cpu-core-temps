@@ -752,8 +752,10 @@
     <span class="cmd">rm</span> -rf ~/.local/share/plasma/plasmoids/com.github.murilomunhao.cpu-core-temps
 
     <span class="cmt"># Copia os arquivos do plasmoid e o ícone do sistema</span>
-    <span class="cmd">cp</span> -r package ~/.local/share/plasma/plasmoids/com.github.murilomunhao.cpu-core-temps
-    <span class="cmd">cp</span> package/contents/icons/com.github.murilomunhao.cpu-core-temps.svg ~/.local/share/icons/hicolor/scalable/apps/
+    <span class="cmd">cp</span> -r package \
+      ~/.local/share/plasma/plasmoids/com.github.murilomunhao.cpu-core-temps
+    <span class="cmd">cp</span> package/contents/icons/com.github.murilomunhao.cpu-core-temps.svg \
+      ~/.local/share/icons/hicolor/scalable/apps/
 
     <span class="cmt"># Reinicia o Plasma Shell para aplicar as alterações</span>
     <span class="cmd">systemctl</span> restart --user plasma-plasmashell.service
