@@ -427,7 +427,7 @@
     .steps li {
       counter-increment: step;
       display: grid;
-      grid-template-columns: auto 1fr;
+      grid-template-columns: auto minmax(0, 1fr);
       gap: 1rem;
       align-items: start;
       background: var(--bg-card);
@@ -474,6 +474,7 @@
       line-height: 1.55;
       color: #c9d1d9;
       margin: 0.75rem 0 0;
+      max-width: 100%;
     }
 
     pre .cmt {
@@ -733,7 +734,7 @@
           <div>
             <h3>Instalar o plasmoid</h3>
             <p>Baixe o arquivo mais recente em <a href="https://github.com/murilomunhao/cpu-core-temps/releases"
-                target="_blank">GitHub Releases</a> e execute os comandos abaixo:</p>
+                target="_blank">GitHub Releases</a> e na pasta onde extraiu o arquivo, execute os comandos abaixo:</p>
             <pre>
     <span class="cmd">unzip</span> cpu-core-temps-v1.0.0.zip
     <span class="cmd">cd</span> cpu-core-temps-v1.0.0
