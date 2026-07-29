@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description"
+    content="CPU Core Temps — widget para a barra de tarefas do KDE Plasma 6. Temperaturas dos núcleos físicos em texto colorido." />
+  <title>CPU Core Temps — Widget KDE Plasma</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap"
+    rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0d1117;
+      --bg-elevated: #161b22;
+      --bg-card: #1c2128;
+      --border: #30363d;
+      --text: #e6edf3;
+      --text-muted: #8b949e;
+      --accent: #58a6ff;
+      --accent-soft: rgba(88, 166, 255, 0.15);
+      --green: #3fb950;
+      --yellow: #d29922;
+      --orange: #db6d28;
+      --red: #f85149;
+      --purple: #bc8cff;
+      --teal: #39c5cf;
+      --radius: 12px;
+      --shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: "Inter", system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* fundo sutil */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 50% at 50% -20%, rgba(88, 166, 255, 0.12), transparent),
+        radial-gradient(ellipse 60% 40% at 100% 50%, rgba(188, 140, 255, 0.06), transparent);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .wrap {
+      position: relative;
+      z-index: 1;
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 0 1.5rem 4rem;
+    }
+
+    /* Nav */
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.25rem 0;
+      border-bottom: 1px solid transparent;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-weight: 600;
+      font-size: 0.95rem;
+      text-decoration: none;
+      color: var(--text);
+    }
+
+    .logo-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 7px;
+      background: linear-gradient(135deg, #4fc3f7, #f85149);
+      display: grid;
+      place-items: center;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: #0d1117;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: color 0.15s;
+    }
+
+    .nav-links a:hover {
+      color: var(--text);
+    }
+
+    /* Hero */
+    header.hero {
+      text-align: center;
+      padding: 4rem 0 3rem;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.3rem 0.75rem;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      margin-bottom: 1.25rem;
+      border: 1px solid rgba(88, 166, 255, 0.25);
+    }
+
+    h1 {
+      font-size: clamp(2rem, 5vw, 2.75rem);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      margin-bottom: 1rem;
+    }
+
+    h1 span {
+      background: linear-gradient(105deg, #4fc3f7 0%, #58a6ff 40%, #f85149 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hero-lead {
+      font-size: 1.125rem;
+      color: var(--text-muted);
+      max-width: 34em;
+      margin: 0 auto 2rem;
+    }
+
+    .cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      justify-content: center;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.7rem 1.25rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: transform 0.15s, background 0.15s, border-color 0.15s;
+      border: 1px solid transparent;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #0d1117;
+    }
+
+    .btn-primary:hover {
+      background: #79b8ff;
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--text);
+      border-color: var(--border);
+    }
+
+    .btn-ghost:hover {
+      background: var(--bg-elevated);
+      border-color: var(--text-muted);
+    }
+
+    /* Mock panel preview */
+    .preview {
+      margin: 2.5rem auto 0;
+      max-width: 640px;
+    }
+
+    .panel-mock {
+      background: linear-gradient(180deg, #2a2e35 0%, #1e2228 100%);
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .panel-bar {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.55rem 1rem;
+      min-height: 42px;
+      background: rgba(0, 0, 0, 0.35);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .panel-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--text-muted);
+      opacity: 0.5;
+    }
+
+    .widget-temps {
+      display: flex;
+      align-items: center;
+      gap: 0.15rem;
+      font-family: "JetBrains Mono", ui-monospace, monospace;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      margin-left: auto;
+      margin-right: 0.5rem;
+    }
+
+    .widget-temps .c0 {
+      color: #4fc3f7;
+    }
+
+    .widget-temps .c1 {
+      color: #81c784;
+    }
+
+    .widget-temps .c2 {
+      color: #ffd54f;
+    }
+
+    .widget-temps .c3 {
+      color: #ba68c8;
+    }
+
+    .widget-temps .c4 {
+      color: #ff8a65;
+    }
+
+    .widget-temps .c5 {
+      color: #4db6ac;
+    }
+
+    .widget-temps .hot {
+      color: #ff9800;
+      font-weight: 700;
+    }
+
+    .widget-temps .crit {
+      color: #ff1744;
+      font-weight: 700;
+    }
+
+    .panel-clock {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .preview-caption {
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 0.75rem;
+    }
+
+    /* Sections */
+    section {
+      margin-top: 4rem;
+    }
+
+    h2 {
+      font-size: 1.35rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    h2::before {
+      content: "";
+      width: 4px;
+      height: 1.1em;
+      border-radius: 2px;
+      background: var(--accent);
+    }
+
+    p {
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
+
+    p strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    /* Feature grid */
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1rem;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      transition: border-color 0.15s;
+    }
+
+    .card:hover {
+      border-color: rgba(88, 166, 255, 0.35);
+    }
+
+    .card-icon {
+      font-size: 1.4rem;
+      margin-bottom: 0.6rem;
+    }
+
+    .card h3 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 0.35rem;
+    }
+
+    .card p {
+      font-size: 0.875rem;
+      margin: 0;
+    }
+
+    /* Screenshots */
+    .shots {
+      display: grid;
+      gap: 1.25rem;
+    }
+
+    .shot {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .shot-frame {
+      padding: 1.5rem 1.25rem;
+      background: #0a0c10;
+      display: flex;
+      justify-content: center;
+    }
+
+    .shot figcaption {
+      padding: 0.85rem 1.1rem;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      border-top: 1px solid var(--border);
+    }
+
+    .shot figcaption strong {
+      color: var(--text);
+    }
+
+    /* Alert states demo */
+    .state-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-top: 0.5rem;
+    }
+
+    .state-pill {
+      font-family: "JetBrains Mono", monospace;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.4rem 0.7rem;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+    }
+
+    /* Steps */
+    .steps {
+      counter-reset: step;
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .steps li {
+      counter-increment: step;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 1rem;
+      align-items: start;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1rem 1.15rem;
+    }
+
+    .steps li::before {
+      content: counter(step);
+      width: 1.75rem;
+      height: 1.75rem;
+      border-radius: 50%;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-size: 0.8rem;
+      font-weight: 700;
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+      margin-top: 0.1rem;
+    }
+
+    .steps h3 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    .steps p {
+      font-size: 0.875rem;
+      margin: 0;
+    }
+
+    /* Code */
+    pre {
+      background: #0a0c10;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem 1.15rem;
+      overflow-x: auto;
+      font-family: "JetBrains Mono", ui-monospace, monospace;
+      font-size: 0.8rem;
+      line-height: 1.55;
+      color: #c9d1d9;
+      margin: 0.75rem 0 0;
+    }
+
+    pre .cmt {
+      color: #6e7681;
+    }
+
+    pre .cmd {
+      color: #79c0ff;
+    }
+
+    pre .path {
+      color: #a5d6ff;
+    }
+
+    /* Config table */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.875rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    th,
+    td {
+      text-align: left;
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    th {
+      background: rgba(255, 255, 255, 0.03);
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    td {
+      color: var(--text-muted);
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    /* Footer */
+    footer {
+      margin-top: 4.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    footer a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 560px) {
+      .nav-links {
+        display: none;
+      }
+
+      header.hero {
+        padding: 2.5rem 0 2rem;
+      }
+
+      .widget-temps {
+        font-size: 0.7rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <nav>
+      <a class="logo" href="#">
+        <span class="logo-icon">°C</span>
+        CPU Core Temps
+      </a>
+      <ul class="nav-links">
+        <li><a href="#sobre">Sobre</a></li>
+        <li><a href="#prints">Prints</a></li>
+        <li><a href="#usar">Como usar</a></li>
+        <li><a href="#config">Config</a></li>
+      </ul>
+    </nav>
+
+    <header class="hero">
+      <div class="badge">KDE Plasma 6 · Plasmoid</div>
+      <h1>Temperaturas dos <span>núcleos físicos</span><br />na barra de tarefas</h1>
+      <p class="hero-lead">
+        Widget leve e minimalista que mostra a temperatura real de cada núcleo
+        da CPU em texto colorido — direto no painel do Plasma.
+      </p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="https://github.com/murilomunhao/cpu-core-temps/releases">
+          Baixar widget
+        </a>
+        <a class="btn btn-ghost" href="https://github.com/murilomunhao/cpu-core-temps">
+          Ver no GitHub
+        </a>
+      </div>
+
+      <div class="preview">
+        <div class="panel-mock" aria-hidden="true">
+          <div class="panel-bar">
+            <span class="panel-dot"></span>
+            <span class="panel-dot"></span>
+            <div class="widget-temps">
+              <span class="c0">C0:42°</span>
+              <span style="color:#484f58;margin:0 2px"> </span>
+              <span class="c1">C1:45°</span>
+              <span style="color:#484f58;margin:0 2px"> </span>
+              <span class="c2">C2:48°</span>
+              <span style="color:#484f58;margin:0 2px"> </span>
+              <span class="c3">C3:51°</span>
+              <span style="color:#484f58;margin:0 2px"> </span>
+              <span class="c4">C4:44°</span>
+              <span style="color:#484f58;margin:0 2px"> </span>
+              <span class="c5">C5:47°</span>
+            </div>
+            <span class="panel-clock">14:32</span>
+          </div>
+        </div>
+        <p class="preview-caption">Prévia do widget no painel — cada núcleo com sua cor</p>
+      </div>
+    </header>
+
+    <section id="sobre">
+      <h2>Para que serve</h2>
+      <p>
+        Monitorar a CPU sem abrir o System Monitor. O <strong>CPU Core Temps</strong>
+        exibe na barra de tarefas a temperatura de cada <strong>núcleo físico</strong>
+        (não das threads HT/SMT), com cores distintas e alerta visual quando a
+        temperatura sobe.
+      </p>
+      <p>
+        Ideal para quem compila, joga ou simplesmente quer um olhar rápido no
+        aquecimento real do processador — sem gráficos, sem popup obrigatório,
+        só o texto que importa.
+      </p>
+
+      <div class="features" style="margin-top: 1.5rem">
+        <div class="card">
+          <div class="card-icon">🔬</div>
+          <h3>Só núcleos físicos</h3>
+          <p>Usa a topologia do kernel para agrupar threads e mostrar um valor por núcleo real.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">🎨</div>
+          <h3>Cores por núcleo</h3>
+          <p>Cada núcleo tem uma cor própria; passa a laranja/vermelho nos limites de aviso e crítico.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">⚡</div>
+          <h3>Leve e nativo</h3>
+          <p>QML + ksystemstats (mesma base do System Monitor). Sem dependências extras pesadas.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">⚙️</div>
+          <h3>Configurável</h3>
+          <p>Limites de temperatura, intervalo, rótulos, separador e tamanho da fonte.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="prints">
+      <h2>Prints de uso</h2>
+      <p>Exemplos de como o widget aparece no painel em diferentes situações.</p>
+
+      <div class="shots">
+        <figure class="shot">
+          <div class="shot-frame">
+            <div class="panel-mock" style="width: 100%; max-width: 520px">
+              <div class="panel-bar">
+                <span class="panel-dot"></span>
+                <div class="widget-temps" style="margin-left: auto">
+                  <span class="c0">C0:38°</span>&nbsp;
+                  <span class="c1">C1:41°</span>&nbsp;
+                  <span class="c2">C2:39°</span>&nbsp;
+                  <span class="c3">C3:40°</span>
+                </div>
+                <span class="panel-clock">09:15</span>
+              </div>
+            </div>
+          </div>
+          <figcaption>
+            <strong>Em repouso</strong> — temperaturas baixas, cada núcleo com sua cor base.
+          </figcaption>
+        </figure>
+
+        <figure class="shot">
+          <div class="shot-frame">
+            <div class="panel-mock" style="width: 100%; max-width: 520px">
+              <div class="panel-bar">
+                <span class="panel-dot"></span>
+                <div class="widget-temps" style="margin-left: auto">
+                  <span class="c0">C0:62°</span>&nbsp;
+                  <span class="hot">C1:78°</span>&nbsp;
+                  <span class="c2">C2:71°</span>&nbsp;
+                  <span class="hot">C3:82°</span>
+                </div>
+                <span class="panel-clock">11:48</span>
+              </div>
+            </div>
+          </div>
+          <figcaption>
+            <strong>Sob carga</strong> — núcleos acima do limite de aviso (75 °C) em tons de laranja.
+          </figcaption>
+        </figure>
+
+        <figure class="shot">
+          <div class="shot-frame">
+            <div class="panel-mock" style="width: 100%; max-width: 520px">
+              <div class="panel-bar">
+                <span class="panel-dot"></span>
+                <div class="widget-temps" style="margin-left: auto">
+                  <span class="hot">C0:86°</span>&nbsp;
+                  <span class="crit">C1:93°</span>&nbsp;
+                  <span class="hot">C2:88°</span>&nbsp;
+                  <span class="crit">C3:95°</span>
+                </div>
+                <span class="panel-clock">16:02</span>
+              </div>
+            </div>
+          </div>
+          <figcaption>
+            <strong>Zona crítica</strong> — acima de 90 °C o texto fica vermelho intenso e em negrito.
+          </figcaption>
+        </figure>
+      </div>
+
+      <div class="state-row" style="margin-top: 1.25rem">
+        <span class="state-pill" style="color:#4fc3f7">Normal · cor do núcleo</span>
+        <span class="state-pill" style="color:#ff9800">Aviso ≥ 75 °C</span>
+        <span class="state-pill" style="color:#ff1744">Crítico ≥ 90 °C</span>
+      </div>
+      <p style="margin-top: 0.75rem; font-size: 0.85rem">
+        Os limites de aviso e crítico são configuráveis. Substitua estas prévias por
+        capturas reais da sua máquina quando publicar no GitHub.
+      </p>
+    </section>
+
+    <section id="usar">
+      <h2>Como usar</h2>
+      <ol class="steps">
+        <li>
+          <div>
+            <h3>Instalar o plasmoid</h3>
+            <p>Copie a pasta do pacote para os widgets do usuário e reinicie o Plasma:</p>
+            <pre><span class="cmt"># extrair o release e instalar</span>
+<span class="cmd">mkdir</span> -p ~/.local/share/plasma/plasmoids
+<span class="cmd">cp</span> -r package ~/.local/share/plasma/plasmoids/com.example.cpu-core-temps
+<span class="cmd">systemctl</span> restart --user plasma-plasmashell.service</pre>
+          </div>
+        </li>
+        <li>
+          <div>
+            <h3>Adicionar ao painel</h3>
+            <p>
+              Botão direito na barra de tarefas → <strong>Editar painel</strong> →
+              <strong>Adicionar widgets</strong> → procure por <strong>CPU Core Temps</strong>
+              e arraste para o painel.
+            </p>
+          </div>
+        </li>
+        <li>
+          <div>
+            <h3>Confirmar sensores</h3>
+            <p>
+              O sistema precisa expor temperaturas via <code>ksystemstats</code>.
+              Se nada aparecer, configure o <code>lm_sensors</code>
+              (<code>(sudo sensors-detect)</code> e verifique com o comando <code>sensors</code>.
+            </p>
+          </div>
+        </li>
+        <li>
+          <div>
+            <h3>Ajustar preferências</h3>
+            <p>
+              Botão direito no widget → <strong>Configurar CPU Core Temps…</strong>
+              para mudar limites, intervalo e aparência.
+            </p>
+          </div>
+        </li>
+      </ol>
+    </section>
+
+    <section id="config">
+      <h2>Configuração</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Opção</th>
+            <th>Padrão</th>
+            <th>Descrição</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Temperatura de aviso</td>
+            <td>75 °C</td>
+            <td>Inicia transição para tons de laranja/vermelho</td>
+          </tr>
+          <tr>
+            <td>Temperatura crítica</td>
+            <td>90 °C</td>
+            <td>Vermelho intenso e negrito</td>
+          </tr>
+          <tr>
+            <td>Intervalo</td>
+            <td>2 s</td>
+            <td>Frequência de atualização dos sensores</td>
+          </tr>
+          <tr>
+            <td>Rótulo do núcleo</td>
+            <td>Sim</td>
+            <td>Mostra <code>C0:</code>, <code>C1:</code>, …</td>
+          </tr>
+          <tr>
+            <td>Unidade</td>
+            <td>Sim</td>
+            <td>Exibe o símbolo °</td>
+          </tr>
+          <tr>
+            <td>Separador</td>
+            <td>espaço</td>
+            <td>Texto entre um núcleo e o próximo</td>
+          </tr>
+          <tr>
+            <td>Tamanho da fonte</td>
+            <td>auto</td>
+            <td>0 = fonte do tema; ou valor em px</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="requisitos">
+      <h2>Requisitos</h2>
+      <div class="features">
+        <div class="card">
+          <h3>Plasma 6</h3>
+          <p>Feito para Plasma 6 / Qt 6. Não testado em Plasma 5.</p>
+        </div>
+        <div class="card">
+          <h3>ksystemstats</h3>
+          <p>Já incluso numa instalação típica do KDE Plasma.</p>
+        </div>
+        <div class="card">
+          <h3>lm_sensors</h3>
+          <p>Necessário para o kernel expor as temperaturas da CPU.</p>
+        </div>
+      </div>
+      <p style="margin-top: 1rem; font-size: 0.9rem">
+        Em alguns processadores AMD o kernel só fornece temperatura de pacote
+        (não por núcleo). Nesse caso o widget mostra a média disponível.
+      </p>
+    </section>
+
+    <footer>
+      <p>
+        CPU Core Temps · widget open source para
+        <a href="https://kde.org/plasma-desktop/">KDE Plasma</a>
+      </p>
+    </footer>
+  </div>
+</body>
+
+</html>
