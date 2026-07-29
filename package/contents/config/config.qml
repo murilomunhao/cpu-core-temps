@@ -1,3 +1,8 @@
+/*
+    SPDX-FileCopyrightText: 2026 Murilo Munhao
+    SPDX-License-Identifier: MIT
+*/
+
 import QtQuick
 import org.kde.plasma.configuration
 

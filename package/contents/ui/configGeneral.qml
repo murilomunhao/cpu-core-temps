@@ -1,3 +1,9 @@
+/*
+    SPDX-FileCopyrightText: 2026 Murilo Munhao
+    SPDX-License-Identifier: MIT
+*/
+
+
 import QtQuick
 import QtQuick.Controls as QQC2
 import QtQuick.Layouts
